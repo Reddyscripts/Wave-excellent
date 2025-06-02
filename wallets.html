@@ -1,0 +1,824 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Connect Your Wallet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: white;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        header {
+            padding: 24px 0;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .connection-status {
+            display: none;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+        }
+
+        .status-indicator {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            animation: pulse 2s infinite;
+        }
+
+        .interact-button {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            font-size: 14px;
+        }
+
+        .interact-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(45deg, #764ba2, #667eea);
+        }
+
+        .interact-button:active {
+            transform: translateY(0);
+        }
+
+        .interact-button.hidden {
+            display: none;
+        }
+
+        main {
+            padding: 48px 0;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 48px;
+            animation: float 6s ease-in-out infinite;
+        }
+
+        .hero h1 {
+            font-size: 48px;
+            font-weight: bold;
+            margin-bottom: 24px;
+        }
+
+        .hero p {
+            font-size: 20px;
+            opacity: 0.8;
+            margin-bottom: 32px;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .wallet-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+
+        .wallet-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .wallet-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .wallet-icon {
+            width: 64px;
+            height: 64px;
+            border-radius: 12px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 32px;
+            margin: 0 auto 16px;
+            overflow: hidden;
+        }
+
+        .wallet-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .wallet-card h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .wallet-card p {
+            opacity: 0.7;
+            font-size: 14px;
+            margin-bottom: 16px;
+        }
+
+        .wallet-card .interact-button {
+            width: 100%;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 32px;
+            margin-bottom: 48px;
+        }
+
+        .feature {
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .feature h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .feature p {
+            opacity: 0.7;
+        }
+
+        .wallet-info {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .wallet-info.hidden {
+            display: none;
+        }
+
+        .wallet-info h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            text-align: center;
+        }
+
+        .wallet-info .info-row {
+            margin-bottom: 12px;
+        }
+
+        .wallet-info .label {
+            font-size: 14px;
+            opacity: 0.7;
+            margin-bottom: 4px;
+        }
+
+        .wallet-info .value {
+            font-family: monospace;
+            font-size: 14px;
+            word-break: break-all;
+        }
+
+        .connection-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .connection-modal.hidden {
+            display: none;
+        }
+
+        .modal-content {
+            background: white;
+            color: black;
+            border-radius: 20px;
+            padding: 32px;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+        }
+
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+            animation: pulse 2s infinite;
+        }
+
+        .modal-content h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .modal-content p {
+            color: #666;
+            margin-bottom: 24px;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 {
+                font-size: 36px;
+            }
+            
+            .hero p {
+                font-size: 18px;
+            }
+            
+            .wallet-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">
+                    🔗 WalletConnect
+                </div>
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div id="connection-status" class="connection-status">
+                        <span>Connected</span>
+                        <div class="status-indicator"></div>
+                    </div>
+                    <button id="disconnect-btn" class="interact-button hidden">
+                        Disconnect
+                    </button>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main>
+        <div class="container">
+            <!-- Hero Section -->
+            <div class="hero">
+                <h1>Connect Your Wallet</h1>
+                <p>Choose from our supported wallets to securely access the decentralized web. Your gateway to DeFi, NFTs, and Web3.</p>
+            </div>
+
+            <!-- Wallet Grid -->
+            <div class="wallet-grid">
+                <!-- MetaMask -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/3/36/MetaMask_Fox.svg" alt="MetaMask" />
+                    </div>
+                    <h3>MetaMask</h3>
+                    <p>The most popular browser wallet</p>
+                    <button class="interact-button" onclick="connectWallet('metamask')">
+                        Connect MetaMask
+                    </button>
+                </div>
+
+                <!-- WalletConnect -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://altcoinsbox.com/wp-content/uploads/2023/03/walletconnect-logo.png" alt="WalletConnect" />
+                    </div>
+                    <h3>WalletConnect</h3>
+                    <p>Connect with QR code</p>
+                    <button class="interact-button" onclick="connectWallet('walletconnect')">
+                        Connect WalletConnect
+                    </button>
+                </div>
+
+                <!-- Coinbase Wallet -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://images.ctfassets.net/q5ulk4bp65r7/3TBS4oVkD1ghowTqVQJlqj/2dfd4ea3b623a7c0d8deb2ff445dee9e/Consumer_Wordmark_White_RGB.png" alt="Coinbase" />
+                    </div>
+                    <h3>Coinbase Wallet</h3>
+                    <p>Connect with Coinbase</p>
+                    <button class="interact-button" onclick="connectWallet('coinbase')">
+                        Connect Coinbase
+                    </button>
+                </div>
+
+                <!-- Trust Wallet -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://trustwallet.com/assets/images/media/assets/trust_platform.svg" alt="Trust Wallet" />
+                    </div>
+                    <h3>Trust Wallet</h3>
+                    <p>Mobile-first wallet</p>
+                    <button class="interact-button" onclick="connectWallet('trust')">
+                        Connect Trust Wallet
+                    </button>
+                </div>
+
+                <!-- Phantom -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://phantom.app/img/phantom-logo.png" alt="Phantom" />
+                    </div>
+                    <h3>Phantom</h3>
+                    <p>Solana wallet</p>
+                    <button class="interact-button" onclick="connectWallet('phantom')">
+                        Connect Phantom
+                    </button>
+                </div>
+
+                <!-- Rainbow -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://rainbow.me/rainbow.png" alt="Rainbow" />
+                    </div>
+                    <h3>Rainbow</h3>
+                    <p>Beautiful Ethereum wallet</p>
+                    <button class="interact-button" onclick="connectWallet('rainbow')">
+                        Connect Rainbow
+                    </button>
+                </div>
+
+                <!-- Ledger -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://www.ledger.com/wp-content/themes/ledger-v2/public/images/ledger-logo-long.svg" alt="Ledger" />
+                    </div>
+                    <h3>Ledger</h3>
+                    <p>Hardware wallet security</p>
+                    <button class="interact-button" onclick="connectWallet('ledger')">
+                        Connect Ledger
+                    </button>
+                </div>
+
+                <!-- Trezor -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://trezor.io/static/images/trezor-logo-h.svg" alt="Trezor" />
+                    </div>
+                    <h3>Trezor</h3>
+                    <p>Original hardware wallet</p>
+                    <button class="interact-button" onclick="connectWallet('trezor')">
+                        Connect Trezor
+                    </button>
+                </div>
+
+                <!-- Brave Wallet -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://brave.com/static-assets/images/brave-logo-sans-text.svg" alt="Brave" />
+                    </div>
+                    <h3>Brave Wallet</h3>
+                    <p>Built into Brave browser</p>
+                    <button class="interact-button" onclick="connectWallet('brave')">
+                        Connect Brave
+                    </button>
+                </div>
+
+                <!-- Exodus -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://www.exodus.com/img/exodus-logomark.svg" alt="Exodus" />
+                    </div>
+                    <h3>Exodus</h3>
+                    <p>Desktop & mobile wallet</p>
+                    <button class="interact-button" onclick="connectWallet('exodus')">
+                        Connect Exodus
+                    </button>
+                </div>
+
+                <!-- Atomic Wallet -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://atomicwallet.io/images/press-kit/atomic_wallet_logo.svg" alt="Atomic" />
+                    </div>
+                    <h3>Atomic Wallet</h3>
+                    <p>Multi-currency wallet</p>
+                    <button class="interact-button" onclick="connectWallet('atomic')">
+                        Connect Atomic
+                    </button>
+                </div>
+
+                <!-- OKX Wallet -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://static.okx.com/cdn/assets/imgs/221/58E63FEA47A2B7D7.png" alt="OKX" />
+                    </div>
+                    <h3>OKX Wallet</h3>
+                    <p>Multi-chain wallet</p>
+                    <button class="interact-button" onclick="connectWallet('okx')">
+                        Connect OKX
+                    </button>
+                </div>
+
+                <!-- Binance Wallet -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://bin.bnbstatic.com/static/images/common/logo.png" alt="Binance" />
+                    </div>
+                    <h3>Binance Wallet</h3>
+                    <p>Exchange wallet</p>
+                    <button class="interact-button" onclick="connectWallet('binance')">
+                        Connect Binance
+                    </button>
+                </div>
+
+                <!-- Keplr -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://wallet.keplr.app/assets/logo-256.png" alt="Keplr" />
+                    </div>
+                    <h3>Keplr</h3>
+                    <p>Cosmos ecosystem wallet</p>
+                    <button class="interact-button" onclick="connectWallet('keplr')">
+                        Connect Keplr
+                    </button>
+                </div>
+
+                <!-- Terra Station -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://assets.terra.money/icon/station-extension/icon.png" alt="Terra Station" />
+                    </div>
+                    <h3>Terra Station</h3>
+                    <p>Terra wallet</p>
+                    <button class="interact-button" onclick="connectWallet('terra')">
+                        Connect Terra Station
+                    </button>
+                </div>
+
+                <!-- Solflare -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://solflare.com/img/logo.svg" alt="Solflare" />
+                    </div>
+                    <h3>Solflare</h3>
+                    <p>Solana wallet</p>
+                    <button class="interact-button" onclick="connectWallet('solflare')">
+                        Connect Solflare
+                    </button>
+                </div>
+
+                <!-- Math Wallet -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://mathwallet.org/images/icons/mathwallet.png" alt="Math Wallet" />
+                    </div>
+                    <h3>Math Wallet</h3>
+                    <p>Multi-platform wallet</p>
+                    <button class="interact-button" onclick="connectWallet('math')">
+                        Connect Math Wallet
+                    </button>
+                </div>
+
+                <!-- SafePal -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://safepal.io/static/media/logo.svg" alt="SafePal" />
+                    </div>
+                    <h3>SafePal</h3>
+                    <p>Hardware & software wallet</p>
+                    <button class="interact-button" onclick="connectWallet('safepal')">
+                        Connect SafePal
+                    </button>
+                </div>
+
+                <!-- 1inch Wallet -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://1inch.io/assets/images/logo.svg" alt="1inch" />
+                    </div>
+                    <h3>1inch Wallet</h3>
+                    <p>DeFi-focused wallet</p>
+                    <button class="interact-button" onclick="connectWallet('1inch')">
+                        Connect 1inch
+                    </button>
+                </div>
+
+                <!-- Argent -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://www.argent.xyz/assets/logo.svg" alt="Argent" />
+                    </div>
+                    <h3>Argent</h3>
+                    <p>Smart contract wallet</p>
+                    <button class="interact-button" onclick="connectWallet('argent')">
+                        Connect Argent
+                    </button>
+                </div>
+
+                <!-- Gnosis Safe -->
+                <div class="wallet-card">
+                    <div class="wallet-icon">
+                        <img src="https://safe.global/images/logo-no-text.svg" alt="Gnosis Safe" />
+                    </div>
+                    <h3>Gnosis Safe</h3>
+                    <p>Multi-signature wallet</p>
+                    <button class="interact-button" onclick="connectWallet('gnosis')">
+                        Connect Gnosis Safe
+                    </button>
+                </div>
+            </div>
+
+            <!-- Features Section -->
+            <div class="features-grid">
+                <div class="feature">
+                    <div class="feature-icon">🔒</div>
+                    <h3>Secure</h3>
+                    <p>Your keys, your crypto. We never store your private keys.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">⚡</div>
+                    <h3>Fast</h3>
+                    <p>Lightning-fast connections and transactions.</p>
+                </div>
+                <div class="feature">
+                    <div class="feature-icon">🌐</div>
+                    <h3>Universal</h3>
+                    <p>Access the entire Web3 ecosystem with one connection.</p>
+                </div>
+            </div>
+
+            <!-- Connection Status -->
+            <div id="wallet-info" class="wallet-info hidden">
+                <h3>Wallet Connected</h3>
+                <div class="info-row">
+                    <div class="label">Address:</div>
+                    <div id="wallet-address" class="value"></div>
+                </div>
+                <div class="info-row">
+                    <div class="label">Balance:</div>
+                    <div id="wallet-balance" class="value"></div>
+                </div>
+                <button class="interact-button" style="width: 100%; margin-top: 16px;" onclick="checkBalance()">
+                    Refresh Balance
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Connection Modal -->
+    <div id="connection-modal" class="connection-modal hidden">
+        <div class="modal-content">
+            <div class="modal-icon" id="modal-icon">🔄</div>
+            <h3 id="modal-title">Connecting...</h3>
+            <p id="modal-message">Please confirm the connection in your wallet.</p>
+            <button class="interact-button" onclick="closeModal()">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        // Wallet connection state
+        let connectedWallet = null;
+        let userAddress = null;
+
+        // Wallet information database
+        const walletInfo = {
+            'metamask': { icon: '🦊', name: 'MetaMask' },
+            'walletconnect': { icon: '🔗', name: 'WalletConnect' },
+            'coinbase': { icon: '🔵', name: 'Coinbase Wallet' },
+            'trust': { icon: '🛡️', name: 'Trust Wallet' },
+            'phantom': { icon: '👻', name: 'Phantom' },
+            'rainbow': { icon: '🌈', name: 'Rainbow' },
+            'ledger': { icon: '📱', name: 'Ledger' },
+            'trezor': { icon: '🔐', name: 'Trezor' },
+            'brave': { icon: '🦁', name: 'Brave Wallet' },
+            'exodus': { icon: '🚀', name: 'Exodus' },
+            'atomic': { icon: '⚛️', name: 'Atomic Wallet' },
+            'okx': { icon: '⭕', name: 'OKX Wallet' },
+            'binance': { icon: '🟡', name: 'Binance Wallet' },
+            'keplr': { icon: '🌌', name: 'Keplr' },
+            'terra': { icon: '🌍', name: 'Terra Station' },
+            'solflare': { icon: '☀️', name: 'Solflare' },
+            'math': { icon: '📐', name: 'Math Wallet' },
+            'safepal': { icon: '🛡️', name: 'SafePal' },
+            '1inch': { icon: '🦄', name: '1inch Wallet' },
+            'argent': { icon: '⚔️', name: 'Argent' },
+            'gnosis': { icon: '🏛️', name: 'Gnosis Safe' }
+        };
+
+        // Wallet connection function
+        async function connectWallet(walletType) {
+            showModal(walletType);
+            
+            try {
+                switch(walletType) {
+                    case 'metamask':
+                        await connectMetaMask();
+                        break;
+                    case 'phantom':
+                        await connectPhantom();
+                        break;
+                    default:
+                        await simulateConnection(walletInfo[walletType].name);
+                        break;
+                }
+            } catch (error) {
+                console.error('Connection failed:', error);
+                showError(error.message);
+            }
+        }
+
+        // MetaMask connection
+        async function connectMetaMask() {
+            if (typeof window.ethereum !== 'undefined') {
+                try {
+                    const accounts = await window.ethereum.request({ 
+                        method: 'eth_requestAccounts' 
+                    });
+                    userAddress = accounts[0];
+                    connectedWallet = 'MetaMask';
+                    showSuccess();
+                    updateUI();
+                } catch (error) {
+                    throw new Error('MetaMask connection rejected');
+                }
+            } else {
+                throw new Error('MetaMask not installed');
+            }
+        }
+
+        // Phantom connection
+        async function connectPhantom() {
+            if (typeof window.solana !== 'undefined' && window.solana.isPhantom) {
+                try {
+                    const response = await window.solana.connect();
+                    userAddress = response.publicKey.toString();
+                    connectedWallet = 'Phantom';
+                    showSuccess();
+                    updateUI();
+                } catch (error) {
+                    throw new Error('Phantom connection rejected');
+                }
+            } else {
+                throw new Error('Phantom not installed');
+            }
+        }
+
+        // Simulate connection for other wallets
+        async function simulateConnection(walletName) {
+            return new Promise((resolve) => {
+                setTimeout(() => {
+                    userAddress = '0x' + Math.random().toString(16).substr(2, 40);
+                    connectedWallet = walletName;
+                    showSuccess();
+                    updateUI();
+                    resolve();
+                }, 2000);
+            });
+        }
+
+        // Modal functions
+        function showModal(walletType) {
+            const modal = document.getElementById('connection-modal');
+            const icon = document.getElementById('modal-icon');
+            const title = document.getElementById('modal-title');
+            const message = document.getElementById('modal-message');
+            
+            const wallet = walletInfo[walletType];
+            icon.textContent = wallet.icon;
+            title.textContent = 'Connecting to ' + wallet.name;
+            message.textContent = 'Please confirm the connection in your ' + wallet.name + ' wallet.';
+            
+            modal.classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('connection-modal').classList.add('hidden');
+        }
+
+        function showSuccess() {
+            const icon = document.getElementById('modal-icon');
+            const title = document.getElementById('modal-title');
+            const message = document.getElementById('modal-message');
+            
+            icon.textContent = '✅';
+            title.textContent = 'Connected Successfully!';
+            message.textContent = 'Your wallet has been connected successfully.';
+            
+            setTimeout(() => {
+                closeModal();
+            }, 1500);
+        }
+
+        function showError(errorMessage) {
+            const icon = document.getElementById('modal-icon');
+            const title = document.getElementById('modal-title');
+            const message = document.getElementById('modal-message');
+            
+            icon.textContent = '❌';
+            title.textContent = 'Connection Failed';
+            message.textContent = errorMessage;
+            
+            setTimeout(() => {
+                closeModal();
+            }, 3000);
+        }
+
+        // Update UI after connection
+        function updateUI() {
+            document.getElementById('connection-status').style.display = 'flex';
+            document.getElementById('disconnect-btn').classList.remove('hidden');
+            document.getElementById('wallet-info').classList.remove('hidden');
+            document.getElementById('wallet-address').textContent = userAddress;
+            checkBalance();
+        }
+
+        // Check balance function
+        async function checkBalance() {
+            const balanceElement = document.getElementById('wallet-balance');
+            balanceElement.textContent = 'Loading...';
+            
+            // Simulate balance check
+            setTimeout(() => {
+                const randomBalance = (Math.random() * 10).toFixed(4);
+                const currency = connectedWallet === 'Phantom' ? 'SOL' : 'ETH';
+                balanceElement.textContent = randomBalance + ' ' + currency;
+            }, 1000);
+        }
+
+        // Disconnect function
+        function disconnect() {
+            connectedWallet = null;
+            userAddress = null;
+            
+            document.getElementById('connection-status').style.display = 'none';
+            document.getElementById('disconnect-btn').classList.add('hidden');
+            document.getElementById('wallet-info').classList.add('hidden');
+        }
+
+        // Event listeners
+        document.getElementById('disconnect-btn').addEventListener('click', disconnect);
+        
+        document.getElementById('connection-modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
